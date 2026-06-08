@@ -13,9 +13,15 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @st.cache_resource
 def load_resources():
-    # Menunjuk ke folder 'saved_model' di root repository GitHub Anda
-    model_path = "saved_model" 
+    base_path = "saved_model"
+    model_path = base_path
     
+    # PERBAIKAN OTOMATIS: Jika di dalam folder saved_model ada folder lagi, kode ini akan otomatis masuk ke dalamnya
+    if os.path.exists(base_path) and os.path.isdir(base_path):
+        subdirs = [d for d in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, d))]
+        if subdirs and not os.path.exists(os.path.join(base_path, "config.json")):
+            model_path = os.path.join(base_path, subdirs[0])
+            
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     model = AutoModelForSequenceClassification.from_pretrained(model_path)
     model.to(device)
