@@ -1,5 +1,7 @@
 streamlit
 torch
 transformers
+sentencepiece
+safetensors
 numpy
 scikit-learn
